@@ -62,13 +62,14 @@ if (!empty($team)) {
 $sql .= $where . " order by gameTimeEastern";
 $query = $mysqli->query($sql);
 if ($query->num_rows > 0) {
-	echo '<table cellpadding="4" cellspacing="0" class="">' . "\n";
-	echo '	<tr><th>Home</th><th>Visitor</th><th align="left">Game</th><th>Time / Result</th></tr>' . "\n";
+	echo '<div class="table-responsive">';
+	echo '<table cellpadding="4" cellspacing="0" class="table">' . "\n";
+	echo '	<tr><th>Home</th><th>Visitor</th><th align="left" colspan="3">Game</th><th>Time / Result</th></tr>' . "\n";
 	$i = 0;
 	$prevWeek = 0;
 	while ($row = $query->fetch_assoc()) {
 		if ($prevWeek !== $row['weekNum'] && empty($team)) {
-			echo '	<tr class="subheader"><td colspan="4">Week ' . $row['weekNum'] . '</td></tr>' . "\n";
+			echo '	<tr class="subheader"><td colspan="4"><b>Week ' . $row['weekNum'] . '</b></td></tr>' . "\n";
 		}
 		$homeTeam = new team($row['homeID']);
 		$visitorTeam = new team($row['visitorID']);
@@ -76,10 +77,12 @@ if ($query->num_rows > 0) {
 		echo '	<tr' . $rowclass . '>' . "\n";
 		echo '		<td><img src="images/logos/' . $homeTeam->teamID . '.svg" style="width: 42px; height: 28px;" /></td>' . "\n";
 		echo '		<td><img src="images/logos/' . $visitorTeam->teamID . '.svg" style="width: 42px; height: 28px;" /></td>' . "\n";
-		echo '		<td>' . $visitorTeam->teamName . ' @ ' . $homeTeam->teamName . '</td>' . "\n";
+		echo '		<td colspan="3">' . $visitorTeam->teamName . ' @ ' . $homeTeam->teamName . '</td>' . "\n";
+		
 		if (is_numeric($row['homeScore']) && is_numeric($row['visitorScore'])) {
 			//if score is entered, show result
-			echo '		<td></td>' . "\n";
+		
+			echo '		<td>'.  $visitorTeam->teamID .'-'.$row['visitorScore'] .' '. $homeTeam->teamID .'-'. $row['homeScore']   .'</td>' . "\n";
 		} else {
 			//show time
 			echo '		<td>' . date('D n/j g:i a', strtotime($row['gameTimeEastern'])) . ' ET</td>' . "\n";
@@ -89,6 +92,7 @@ if ($query->num_rows > 0) {
 		$i++;
 	}
 	echo '</table>' . "\n";
+	echo '</div>';
 }
 $query->free;
 
