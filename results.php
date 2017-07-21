@@ -142,7 +142,7 @@ if (sizeof($playerTotals) > 0) {
 <div class="table-responsive">
 <table class="table table-striped">
 	<thead>
-		<tr><th align="left">Scores</th></tr>
+		<tr><th align="left" colspan="1">Scores</th><th colspan="<?php echo sizeof($games)  ; ?>">Week <?php echo $week; ?></th><td><td></tr>
 	</thead>
 	<tbody>
 <?php
@@ -150,7 +150,7 @@ if (sizeof($playerTotals) > 0) {
 	$winnerList = array();
 	//loop through all games
 	echo '<tr>' . "\n";
-	echo '<td>Away</td>' . "\n";
+	echo '<td colspan="1">Away</td>' . "\n";
 	foreach($games as $game) {
 		$winnerList[] = $game['winnerID'];
 		if ($game['visitorID'] == $game['winnerID'] && (int)$game['final'] == 1) {
@@ -161,6 +161,7 @@ if (sizeof($playerTotals) > 0) {
 			echo '<td style="font-size:60%;">' . $game['visitorID'] . "&nbsp;-&nbsp;" . $game[$game['visitorID']]['score'] . '</td>' . "\n";
 		}
 	}
+	echo '<td></td>';
 	echo '</tr>' . "\n";
 	echo '<tr>' . "\n";
 	echo '<td>Home</td>' . "\n";
@@ -173,20 +174,14 @@ if (sizeof($playerTotals) > 0) {
 			echo '<td style="font-size:60%;">' . $game['homeID'] . "&nbsp;-&nbsp;" . $game[$game['homeID']]['score'] . '</td>' . "\n";
 		}
 	}
+	echo '<td> </td>';
 	echo '</tr>' . "\n";
 	console_log($winners);
 ?>
-	</tbody>
-</table>
-</div>
-
-
-<div class="table-responsive">
-<table class="table table-striped">
-	<thead>
-		<tr><th align="left">Player</th><th colspan="<?php echo sizeof($games) -1 ; ?>">Week <?php echo $week; ?></th><th class="center">Tie Breaker</th><th>Survivor</th><th align="left">Score</th></tr>
-	</thead>
-	<tbody>
+	
+		<tr class="subheader"><th align="left" colspan="1">Player</th><th colspan="<?php echo sizeof($games)  ; ?>">Week <?php echo $week; ?></th><th align="left">Score</th></tr>
+	
+	
 <?php
 	$i = 0;
 	arsort($playerTotals);
@@ -209,13 +204,13 @@ if (sizeof($playerTotals) > 0) {
 		echo '	<tr>' . "\n";
 		switch (USER_NAMES_DISPLAY) {
 			case 1:
-				echo '		<td colspan="3">' . trim($tmpUser->firstname . ' ' . $tmpUser->lastname) . '</td></tr><tr>' . "\n";
+				echo '		<td colspan="1">' . trim($tmpUser->firstname . ' ' . $tmpUser->lastname) . '</td>' . "\n";
 				break;
 			case 2:
-				echo '		<td colspan="3">' . trim($tmpUser->userName) . '</td></tr><tr>' . "\n";
+				echo '		<td colspan="1">' . trim($tmpUser->userName) . '</td>' . "\n";
 				break;
 			default: //3
-				echo '		<td colspan="3"><abbr title="' . trim($tmpUser->firstname . ' ' . $tmpUser->lastname) . '">' . trim($tmpUser->userName) . '</abbr></td></tr><tr>' . "\n";
+				echo '		<td colspan="1"><abbr title="' . trim($tmpUser->firstname . ' ' . $tmpUser->lastname) . '">' . trim($tmpUser->userName) . '</abbr></td>' . "\n";
 				break;
 		}
 		//loop through all games
@@ -224,10 +219,10 @@ if (sizeof($playerTotals) > 0) {
 			$pick = $playerPicks[$userID][$game['gameID']];
 
 			if(empty($pick)){$pick = 'no_pick';}
-			// $score = $game[$pick]['score'] ;
-			// $pick = '<img src="images/helmets_small/' . $pick . 'R.gif" / title="'.$pick.'">';
-			$pick = '<img src="images/logos/' . $pick . '.svg" / title="'.$pick.'" height="28" width="42">';
-
+			$score = $game[$pick]['score'] ;
+		 $pick = '<img src="images/helmets_small/' . $pick . 'R.gif" / title="'.$pick.'">';
+		//		$pick = '<img src="images/logos/' . $pick . '.svg" / title="'.$pick.'" height="28" width="42">';
+	
 			if (!empty($game['winnerID'])) {
 				//score has been entered
 				if ($playerPicks[$userID][$game['gameID']] == $game['winnerID']) {
@@ -242,16 +237,19 @@ if (sizeof($playerTotals) > 0) {
 				}
 			}
 			// echo '		<td class="pickTD"><img src="images/helmets_small/' . $pick . 'R.gif" /></td>' . "\n";
-			echo '		<td class="pickTD">' . $pick . '</td>' . "\n";
+			echo '		<td class="">' . $pick . '</td>' . "\n";
 		}
+	/*
 		if(!is_null($survivor)) {
 			$survivorEl = '<img src="images/logos/' . $survivor . '.svg" / title="'.$survivor.'" height="28" width="42">';
 			if(in_array($survivor, $winnerList)) {
 				$survivorEl = '<span class="winner">' . $survivorEl . '</span>';
 			}
 		}
+	
 		echo '<td class="center"> '. $tieBreaker .' </td>';
 		echo '<td class="pickTD">'. $survivorEl .'</td>';
+	*/
 		echo '		<td nowrap><b>' . $totalCorrect . '/' . sizeof($games) . ' (' . number_format(($totalCorrect / sizeof($games)) * 100, 2) . '%)</b></td>' . "\n";
 		echo '	</tr>' . "\n";
 		$i++;
